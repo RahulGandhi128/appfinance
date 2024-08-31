@@ -244,6 +244,12 @@ def function_7(url):
     import requests
     from lxml import html
     import pandas as pd
+    import requests
+
+def scrape_cash_flow_statement(url):
+    # Ensure the URL has a schema
+    if not url.startswith("http://") and not url.startswith("https://"):
+        url = "https://" + url
 
     def scrape_cash_flow_statement(url):
         # Send a request to the URL
