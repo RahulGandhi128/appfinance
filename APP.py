@@ -30,59 +30,58 @@ selected_function = st.sidebar.selectbox(
     ]
 )
 
-# Function to run the selected function and handle errors
-def run_function_with_error_handling(func, *args):
-    try:
-        result = func(*args)
-        st.write(result)
-    except Exception as e:
-        st.error(f"Error running {func.__name__}: {str(e)}")
-
-# Run the selected function one by one
+# Run the selected function
 if selected_function == "Scrape Nifty50 Data":
     st.header("Nifty50 Data")
-    run_function_with_error_handling(function_1)
+    nifty50_df = function_1()
+    st.write(nifty50_df)
 
 elif selected_function == "Scrape Company Names and Links":
     st.header("Company Names and Links")
-    run_function_with_error_handling(function_2)
+    df_links = function_2()
+    st.write(df_links)
 
 elif selected_function == "Get Company Link":
     st.header("Get Company Link")
     company_name = st.text_input("Enter Company Name:")
     if company_name:
         df_links = function_2()  # You need df_links to use this function
-        run_function_with_error_handling(function_3, company_name, df_links)
+        company_link = function_3(company_name, df_links)
+        st.write(f"Company Link: {company_link}")
 
 elif selected_function == "Scrape Quarterly P&L":
     st.header("Scrape Quarterly P&L")
     company_link = st.text_input("Enter Company Link:")
     if company_link:
-        run_function_with_error_handling(function_4, company_link)
+        pnl_df = function_4(company_link)
+        st.write(pnl_df)
 
 elif selected_function == "Scrape Income Statement":
     st.header("Scrape Income Statement")
     company_link = st.text_input("Enter Company Link:")
     if company_link:
-        run_function_with_error_handling(function_5, company_link)
+        income_df = function_5(company_link)
+        st.write(income_df)
 
 elif selected_function == "Scrape Balance Sheet":
     st.header("Scrape Balance Sheet")
     company_link = st.text_input("Enter Company Link:")
     if company_link:
-        run_function_with_error_handling(function_6, company_link)
+        balance_df = function_6(company_link)
+        st.write(balance_df)
 
 elif selected_function == "Scrape Cash Flow Statement":
     st.header("Scrape Cash Flow Statement")
     company_link = st.text_input("Enter Company Link:")
     if company_link:
-        run_function_with_error_handling(function_7, company_link)
+        cash_flow_df = function_7(company_link)
+        st.write(cash_flow_df)
 
 elif selected_function == "Process Company Data":
     st.header("Process Company Data")
     company_name = st.text_input("Enter Company Name:")
     if company_name:
         df_links = function_2()
-        run_function_with_error_handling(process_company_data, company_name)
+        process_company_data(company_name)
 
 # Additional functionalities or outputs can be added as per your requirement
