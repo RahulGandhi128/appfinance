@@ -4,7 +4,11 @@ import pandas as pd
 # Import necessary functions
 from functions1 import (
     function_1, function_2, function_3, function_4, function_5, function_6,
-    function_7, process_company_data
+    function_7, process_company_data, scrape_table, scrape_table_with_links,
+    get_quarterly_income_statements, calculate_number_of_shares, 
+    calculate_firm_metrics, calculate_adjusted_statistics, calculate_combined_metrics,
+    transpose_and_clean_df, clean_and_convert_to_float, calculate_investment_rate,
+    set_api_key, configure_genai
 )
 
 # Streamlit App
@@ -26,58 +30,59 @@ selected_function = st.sidebar.selectbox(
     ]
 )
 
-def safe_run_function(func, *args):
+# Function to run the selected function and handle errors
+def run_function_with_error_handling(func, *args):
     try:
         result = func(*args)
         st.write(result)
     except Exception as e:
-        st.error(f"Error running {func.__name__}: {e}")
+        st.error(f"Error running {func.__name__}: {str(e)}")
 
-# Run the selected function
+# Run the selected function one by one
 if selected_function == "Scrape Nifty50 Data":
     st.header("Nifty50 Data")
-    safe_run_function(function_1)
+    run_function_with_error_handling(function_1)
 
 elif selected_function == "Scrape Company Names and Links":
     st.header("Company Names and Links")
-    safe_run_function(function_2)
+    run_function_with_error_handling(function_2)
 
 elif selected_function == "Get Company Link":
     st.header("Get Company Link")
     company_name = st.text_input("Enter Company Name:")
     if company_name:
         df_links = function_2()  # You need df_links to use this function
-        safe_run_function(function_3, company_name, df_links)
+        run_function_with_error_handling(function_3, company_name, df_links)
 
 elif selected_function == "Scrape Quarterly P&L":
     st.header("Scrape Quarterly P&L")
     company_link = st.text_input("Enter Company Link:")
     if company_link:
-        safe_run_function(function_4, company_link)
+        run_function_with_error_handling(function_4, company_link)
 
 elif selected_function == "Scrape Income Statement":
     st.header("Scrape Income Statement")
     company_link = st.text_input("Enter Company Link:")
     if company_link:
-        safe_run_function(function_5, company_link)
+        run_function_with_error_handling(function_5, company_link)
 
 elif selected_function == "Scrape Balance Sheet":
     st.header("Scrape Balance Sheet")
     company_link = st.text_input("Enter Company Link:")
     if company_link:
-        safe_run_function(function_6, company_link)
+        run_function_with_error_handling(function_6, company_link)
 
 elif selected_function == "Scrape Cash Flow Statement":
     st.header("Scrape Cash Flow Statement")
     company_link = st.text_input("Enter Company Link:")
     if company_link:
-        safe_run_function(function_7, company_link)
+        run_function_with_error_handling(function_7, company_link)
 
 elif selected_function == "Process Company Data":
     st.header("Process Company Data")
     company_name = st.text_input("Enter Company Name:")
     if company_name:
         df_links = function_2()
-        safe_run_function(process_company_data, company_name)
+        run_function_with_error_handling(process_company_data, company_name)
 
 # Additional functionalities or outputs can be added as per your requirement
