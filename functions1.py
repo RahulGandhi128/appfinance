@@ -118,172 +118,125 @@ def function_2():
     return df_links
 
 
-# Function 3: Get company link from name
-def function_3(company_name, df_links):
-    def get_company_link(company_name):
-        match = df_links[df_links['Company Name'].str.lower() == company_name.lower()]
-        return match['Link'].values[0] if not match.empty else "Company not found."
-
-    return get_company_link(company_name)
-
-
-# Function 4: Scrape quarterly P&L sheet from a company link
-def function_4(url):
+def get_company_link(company_name, df_links):
+    match = df_links[df_links['Company Name'].str.lower() == company_name.lower()]
+    return match['Link'].values[0] if not match.empty else "Company not found."
+def scrape_quarterlypnl_sheet(url):
     import requests
     from bs4 import BeautifulSoup
     import pandas as pd
 
-    def scrape_quarterlypnl_sheet(url):
-        try:
-            # Send a GET request to the URL
-            response = requests.get(url)
-            response.raise_for_status()
+    try:
+        # Send a GET request to the URL
+        response = requests.get(url)
+        response.raise_for_status()
 
-            # Parse the HTML content
-            soup = BeautifulSoup(response.content, 'html.parser')
+        # Parse the HTML content
+        soup = BeautifulSoup(response.content, 'html.parser')
 
-            # Find the table element containing the balance sheet data
-            table = soup.find('table')
-            if not table:
-                print(f"Table not found for URL: {url}")
-                return None
-
-            # Find the header row and extract column names
-            header_row = table.find('thead').find('tr')
-            headers = [th.text.strip() for th in header_row.find_all('th')]
-
-            # Find the data rows and extract data
-            data_rows = table.find('tbody').find_all('tr')
-            data = []
-            for row in data_rows:
-                data.append([td.text.strip() for td in row.find_all('td')])
-
-            # Create a DataFrame from the extracted data
-            df = pd.DataFrame(data, columns=headers)
-
-            return df
-        except Exception as e:
-            print(f"Error scraping data for URL {url}: {e}")
+        # Find the table element containing the P&L sheet data
+        table = soup.find('table')
+        if not table:
+            print(f"Table not found for URL: {url}")
             return None
 
-    return scrape_quarterlypnl_sheet(url)
-# Function 5: Scrape income statement data
-def function_5(url):
+        # Find the header row and extract column names
+        header_row = table.find('thead').find('tr')
+        headers = [th.text.strip() for th in header_row.find_all('th')]
+
+        # Find the data rows and extract data
+        data_rows = table.find('tbody').find_all('tr')
+        data = []
+        for row in data_rows:
+            data.append([td.text.strip() for td in row.find_all('td')])
+
+        # Create a DataFrame from the extracted data
+        df = pd.DataFrame(data, columns=headers)
+
+        return df
+    except Exception as e:
+        print(f"Error scraping data for URL {url}: {e}")
+        return None
+def scrape_income_statement(url):
     import requests
     from bs4 import BeautifulSoup
     import pandas as pd
     
-    def income_statement(url):
-        try:
-            # Send a GET request to the URL
-            response = requests.get(url)
-            response.raise_for_status()
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
 
-            # Parse the HTML content
-            soup = BeautifulSoup(response.content, 'html.parser')
+        soup = BeautifulSoup(response.content, 'html.parser')
 
-            # Find the table element containing the income statement data
-            table = soup.select_one('section:nth-of-type(5) > div:nth-of-type(3) > table')
-            if not table:
-                print(f"Table not found for URL: {url}")
-                return None
-
-            # Find the header row and extract column names
-            header_row = table.select_one('thead > tr')
-            headers = [th.text.strip() for th in header_row.find_all('th')]
-
-            # Find the data rows and extract data
-            data_rows = table.select('tbody > tr')
-            data = []
-            for row in data_rows:
-                data.append([td.text.strip() for td in row.find_all('td')])
-
-            # Create a DataFrame from the extracted data
-            df = pd.DataFrame(data, columns=headers)
-
-            return df
-        except Exception as e:
-            print(f"Error scraping data for URL {url}: {e}")
+        table = soup.select_one('section:nth-of-type(5) > div:nth-of-type(3) > table')
+        if not table:
+            print(f"Table not found for URL: {url}")
             return None
 
-    return income_statement(url)
-# Function 6: Scrape balance sheet data
-def function_6(url):
+        header_row = table.select_one('thead > tr')
+        headers = [th.text.strip() for th in header_row.find_all('th')]
+
+        data_rows = table.select('tbody > tr')
+        data = [[td.text.strip() for td in row.find_all('td')] for row in data_rows]
+
+        df = pd.DataFrame(data, columns=headers)
+        return df
+    except Exception as e:
+        print(f"Error scraping data for URL {url}: {e}")
+        return None
+def scrape_balance_sheet(url):
     import requests
     from bs4 import BeautifulSoup
     import pandas as pd
 
-    def balance_sheet(url):
-        try:
-            response = requests.get(url)
-            response.raise_for_status()
-            soup = BeautifulSoup(response.content, 'html.parser')
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.content, 'html.parser')
 
-            # Find the table element containing the balance sheet data
-            table = soup.select_one('section:nth-of-type(6) > div:nth-of-type(2) > table')
-            if not table:
-                print(f"Balance Sheet table not found for URL: {url}")
-                return None
-
-            # Extract column names
-            header_row = table.select_one('thead > tr')
-            headers = [th.text.strip() for th in header_row.find_all('th')]
-
-            # Extract data rows
-            data_rows = table.select('tbody > tr')
-            data = [[td.text.strip() for td in row.find_all('td')] for row in data_rows]
-
-            return pd.DataFrame(data, columns=headers)
-        except Exception as e:
-            print(f"Error scraping Balance Sheet data for URL {url}: {e}")
+        table = soup.select_one('section:nth-of-type(6) > div:nth-of-type(2) > table')
+        if not table:
+            print(f"Balance Sheet table not found for URL: {url}")
             return None
 
-    return balance_sheet(url)
-# Function 7: Scrape cash flow statement data
-def function_7(url):
+        header_row = table.select_one('thead > tr')
+        headers = [th.text.strip() for th in header_row.find_all('th')]
+
+        data_rows = table.select('tbody > tr')
+        data = [[td.text.strip() for td in row.find_all('td')] for row in data_rows]
+
+        return pd.DataFrame(data, columns=headers)
+    except Exception as e:
+        print(f"Error scraping Balance Sheet data for URL {url}: {e}")
+        return None
+def scrape_cash_flow_statement(url):
     import requests
     from lxml import html
     import pandas as pd
-    import requests
 
-def scrape_cash_flow_statement(url):
-    # Ensure the URL has a schema
-    if not url.startswith("http://") and not url.startswith("https://"):
-        url = "https://" + url
-
-    def scrape_cash_flow_statement(url):
-        # Send a request to the URL
+    try:
         response = requests.get(url)
-        
-        # Parse the HTML content
+        response.raise_for_status()
         tree = html.fromstring(response.content)
-        
-        # Define XPaths for the table header and body
+
         header_xpath = '/html/body/main/section[7]/div[2]/table/thead/tr'
         body_xpath = '/html/body/main/section[7]/div[2]/table/tbody/tr'
 
-        # Extract headers
         headers = tree.xpath(header_xpath + '/th/text()')
-
-        # Extract rows
         rows = tree.xpath(body_xpath)
-        
-        # Initialize lists to store row data and labels
+
         data = []
         labels = []
 
         for row in rows:
-            # Extract the first cell (which contains the label)
             label = row.xpath('td[1]//text()')
-            # Extract the remaining data in the row
             row_data = row.xpath('td[position()>1]/text()')
-            
-            if label:
-                labels.append(label[0].strip())  # Store the label
-            else:
-                labels.append("")  # Empty label if not found
 
-            # Ensure each row has the correct number of columns
+            if label:
+                labels.append(label[0].strip())
+            else:
+                labels.append("")
+
             if len(row_data) < len(headers) - 1:
                 row_data.extend([None] * (len(headers) - 1 - len(row_data)))
             elif len(row_data) > len(headers) - 1:
@@ -291,54 +244,61 @@ def scrape_cash_flow_statement(url):
 
             data.append(row_data)
 
-        # Create a DataFrame with labels as the first column
         cash_flow_df = pd.DataFrame(data, columns=headers[1:])
-        cash_flow_df.insert(0, "Description", labels)  # Insert the labels column with a proper header
+        cash_flow_df.insert(0, "Description", labels)
 
         return cash_flow_df
-
-    return scrape_cash_flow_statement(url)
-# Function to get company data
-def process_company_data(company_name):
-    company_link = get_company_link(company_name)
+    except Exception as e:
+        print(f"Error scraping Cash Flow Statement data for URL {url}: {e}")
+        return None
+def process_company_data(company_name, df_links):
+    company_link = function_3(company_name, df_links)
 
     if company_link != "Company not found.":
         full_url = "https://www.screener.in" + company_link
-        print(f"Full URL: {full_url}")  # Optional debug print
+        st.write(f"Full URL: {full_url}")  # Display the URL in the app
 
-        # Get Income Statement
-        income_statement_df = income_statement(full_url)
+        # Get and display Income Statement
+        income_statement_df = function_5(full_url)
         if income_statement_df is not None:
-            print(f"Company: {company_name} - Income Statement")
-            print(income_statement_df)
+            st.subheader(f"Company: {company_name} - Income Statement")
+            st.write(income_statement_df)
+            st.write("=" * 50)
         else:
-            print(f"Failed to retrieve Income Statement data for {company_name}.")
+            st.error(f"Failed to retrieve Income Statement data for {company_name}.")
 
-        # Get Balance Sheet
-        balance_sheet_df = balance_sheet(full_url)
+        # Get and display Balance Sheet
+        balance_sheet_df = function_6(full_url)
         if balance_sheet_df is not None:
-            print(f"Company: {company_name} - Balance Sheet")
-            print(balance_sheet_df)
+            st.subheader(f"Company: {company_name} - Balance Sheet")
+            st.write(balance_sheet_df)
+            st.write("=" * 50)
         else:
-            print(f"Failed to retrieve Balance Sheet data for {company_name}.")
+            st.error(f"Failed to retrieve Balance Sheet data for {company_name}.")
 
-        # Get Cash Flow Statement
-        cash_flow_df = scrape_cash_flow_statement(full_url)
+        # Get and display Cash Flow Statement
+        cash_flow_df = function_7(full_url)
+        cash_flow_df.iloc[0, 0] = "Cash Flow from operations"
+        cash_flow_df.iloc[1, 0] = "Cash Flow from investing"
+        cash_flow_df.iloc[2, 0] = "Cash Flow from financing"
         if not cash_flow_df.empty:
-            print(f"Company: {company_name} - Cash Flow Statement")
-            print(cash_flow_df)
+            st.subheader(f"Company: {company_name} - Cash Flow Statement")
+            st.write(cash_flow_df)
+            st.write("=" * 50)
         else:
-            print(f"Failed to retrieve Cash Flow Statement data for {company_name}.")
+            st.error(f"Failed to retrieve Cash Flow Statement data for {company_name}.")
 
-        # Get Quarterly P&L Statement
-        pnl_quarterly = scrape_quarterlypnl_sheet(full_url)
+        # Get and display Quarterly P&L Statement
+        pnl_quarterly = function_4(full_url)
+        pnl_quarterly = pnl_quarterly[:-2]
         if pnl_quarterly is not None:
-            print(f"Company: {company_name} - Quarterly P&L Statement")
-            print(pnl_quarterly)
+            st.subheader(f"Company: {company_name} - Quarterly P&L Statement")
+            st.write(pnl_quarterly)
+            st.write("=" * 50)
         else:
-            print(f"Failed to retrieve Quarterly P&L Statement data for {company_name}.")
+            st.error(f"Failed to retrieve Quarterly P&L Statement data for {company_name}.")
     else:
-        print("Company not found or invalid link.")
+        st.error("Company not found or invalid link.")
 # 
 # 
 # 
