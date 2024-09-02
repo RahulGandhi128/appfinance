@@ -7,7 +7,7 @@ from functions1 import (
     get_quarterly_income_statements, calculate_number_of_shares, 
     calculate_firm_metrics, calculate_adjusted_statistics, calculate_combined_metrics,
     transpose_and_clean_df, clean_and_convert_to_float, calculate_investment_rate,
-    set_api_key, configure_genai
+    set_api_key, configure_genai, function_1(),function_2()
 )
 
 # Streamlit App
