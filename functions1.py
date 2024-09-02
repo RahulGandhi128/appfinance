@@ -260,7 +260,7 @@ def process_company_data(company_name, df_links):
         st.write(f"Full URL: {full_url}")  # Display the URL in the app
 
         # Get and display Income Statement
-        income_statement_df = function_5(full_url)
+        income_statement_df = scrape_income_statement(full_url)
         if income_statement_df is not None:
             st.subheader(f"Company: {company_name} - Income Statement")
             st.write(income_statement_df)
@@ -269,7 +269,7 @@ def process_company_data(company_name, df_links):
             st.error(f"Failed to retrieve Income Statement data for {company_name}.")
 
         # Get and display Balance Sheet
-        balance_sheet_df = function_6(full_url)
+        balance_sheet_df = scrape_balance_sheet(full_url)
         if balance_sheet_df is not None:
             st.subheader(f"Company: {company_name} - Balance Sheet")
             st.write(balance_sheet_df)
@@ -278,7 +278,7 @@ def process_company_data(company_name, df_links):
             st.error(f"Failed to retrieve Balance Sheet data for {company_name}.")
 
         # Get and display Cash Flow Statement
-        cash_flow_df = function_7(full_url)
+        cash_flow_df = scrape_cash_flow_statement(full_url)
         cash_flow_df.iloc[0, 0] = "Cash Flow from operations"
         cash_flow_df.iloc[1, 0] = "Cash Flow from investing"
         cash_flow_df.iloc[2, 0] = "Cash Flow from financing"
@@ -290,7 +290,7 @@ def process_company_data(company_name, df_links):
             st.error(f"Failed to retrieve Cash Flow Statement data for {company_name}.")
 
         # Get and display Quarterly P&L Statement
-        pnl_quarterly = function_4(full_url)
+        pnl_quarterly = scrape_quarterlypnl_sheet(full_url)
         pnl_quarterly = pnl_quarterly[:-2]
         if pnl_quarterly is not None:
             st.subheader(f"Company: {company_name} - Quarterly P&L Statement")
