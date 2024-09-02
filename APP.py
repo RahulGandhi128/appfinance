@@ -3,8 +3,7 @@ import pandas as pd
 
 # Import necessary functions
 from functions1 import (
-    function_1, function_2, function_3, function_4, function_5, function_6,
-    function_7, process_company_data, scrape_table, scrape_table_with_links,
+    process_company_data, scrape_table, scrape_table_with_links,
     get_quarterly_income_statements, calculate_number_of_shares, 
     calculate_firm_metrics, calculate_adjusted_statistics, calculate_combined_metrics,
     transpose_and_clean_df, clean_and_convert_to_float, calculate_investment_rate,
