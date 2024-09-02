@@ -313,7 +313,7 @@ def scrape_table(full_url):
     options.add_argument('--headless')
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     
-    driver.get(url)
+    driver.get(full_url)
     time.sleep(5)
 
     # Scrape table
@@ -338,7 +338,7 @@ def scrape_table_with_links(full_url):
     options.add_argument('--headless')
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     
-    driver.get(url)
+    driver.get(full_url)
     time.sleep(5)
 
     # Scrape table
