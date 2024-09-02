@@ -52,7 +52,6 @@ elif selected_function == "Process Company Data":
             df_links_peers = scrape_table_with_links(full_url)
 
 # Run functions in the background without displaying their outputs
-
 # Get quarterly income statements based on scraped peer links
 quarterly_income_statements = get_quarterly_income_statements(df_links_peers)
 
