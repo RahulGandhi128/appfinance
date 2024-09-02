@@ -41,3 +41,57 @@ elif selected_function == "Process Company Data":
     if company_name:
         df_links = function_2()  # Fetch the company links only once
         process_company_data(company_name, df_links)
+# Add new functionality to sidebar
+selected_function = st.sidebar.selectbox(
+    "Choose a function to run:",
+    [
+        "Scrape Nifty50 Data",
+        "Scrape Company Names and Links",
+        "Process Company Data",
+        "Calculate Adjusted Statistics"
+    ]
+)
+
+# Run the selected function
+if selected_function == "Scrape Nifty50 Data":
+    st.header("Nifty50 Data")
+    nifty50_df = function_1()
+    st.write(nifty50_df)
+
+elif selected_function == "Scrape Company Names and Links":
+    st.header("Company Names and Links")
+    df_links = function_2()
+    st.write(df_links)
+
+elif selected_function == "Process Company Data":
+    st.header("Process Company Data")
+    company_name = st.text_input("Enter Company Name:")
+    if company_name:
+        df_links = function_2()  # Fetch the company links only once
+        process_company_data(company_name, df_links)
+        st.success(f"Data processed for {company_name}.")
+
+# New tab for calculating adjusted statistics
+elif selected_function == "Calculate Adjusted Statistics":
+    st.header("Calculate Adjusted Statistics")
+
+    # Assume company_name and dfp (processed data) are available from the earlier step
+    if company_name:
+        # Fetch or reuse the previously processed data (assuming it's in dfp, ttm_sales_df)
+        # You might need to ensure dfp and ttm_sales_df are generated in the Process Company Data step
+
+        column_name = st.text_input("Enter the column name for adjustment calculations:")
+
+        if column_name:
+            # Assuming the processed data is stored in dfp and ttm_sales_df
+            dfp = pd.DataFrame()  # Placeholder, use actual processed data
+            ttm_sales_df = pd.DataFrame()  # Placeholder, use actual TTM sales data
+            df_shares = calculate_number_of_shares(dfp)
+
+            # Calculate firm metrics
+            TTM_Net_Profit_f1, share_f1, _ = calculate_firm_metrics(ttm_sales_df, df_shares)
+
+            # Calculate and display adjusted statistics
+            adjusted_stats = calculate_adjusted_statistics(dfp, column_name, TTM_Net_Profit_f1, share_f1)
+            st.write(adjusted_stats)
+
