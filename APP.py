@@ -62,12 +62,7 @@ df_shares = calculate_number_of_shares(dfp)
 
 # Calculate firm metrics using TTM sales and shares data
 TTM_Net_Profit_f1, share_f1, TTM_Sales_f1 = calculate_firm_metrics(ttm_sales_df, df_shares)
-
-# # New tab for calculating adjusted statistics
-# elif selected_function == "Calculate Adjusted Statistics":
-#     st.header("Calculate Adjusted Statistics")
-
-    # Assume company_name and dfp (processed data) are available from the earlier step
+# Assume company_name and dfp (processed data) are available from the earlier step
 if company_name:
         # Fetch or reuse the previously processed data (assuming it's in dfp, ttm_sales_df)
         # You might need to ensure dfp and ttm_sales_df are generated in the Process Company Data step
@@ -76,9 +71,9 @@ if company_name:
 
 if column_name:
  # Assuming the processed data is stored in dfp and ttm_sales_df
-dfp = pd.DataFrame()  # Placeholder, use actual processed data
-ttm_sales_df = pd.DataFrame()  # Placeholder, use actual TTM sales data
-df_shares = calculate_number_of_shares(dfp)
+    dfp = pd.DataFrame()  # Placeholder, use actual processed data
+    ttm_sales_df = pd.DataFrame()  # Placeholder, use actual TTM sales data
+    df_shares = calculate_number_of_shares(dfp)
 
  # Calculate firm metrics
 TTM_Net_Profit_f1, share_f1, _ = calculate_firm_metrics(ttm_sales_df, df_shares)
