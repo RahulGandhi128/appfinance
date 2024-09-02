@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Import necessary functions
-from Functions2.py import (
+from Functions2 import (
     function_1, function_2, function_3, function_4, function_5, function_6,
     function_7, process_company_data, scrape_table, scrape_table_with_links,
     get_quarterly_income_statements, calculate_number_of_shares, 
