@@ -20,7 +20,7 @@ selected_function = st.sidebar.selectbox(
     [
         "Scrape Nifty50 Data",
         "Scrape Company Names and Links",
-        "Process Company Data"
+        "Process Company Data","Calculate Adjusted Statistics"
     ]
 )
 
@@ -41,36 +41,6 @@ elif selected_function == "Process Company Data":
     if company_name:
         df_links = function_2()  # Fetch the company links only once
         process_company_data(company_name, df_links)
-# Add new functionality to sidebar
-selected_function = st.sidebar.selectbox(
-    "Choose a function to run:",
-    [
-        "Scrape Nifty50 Data",
-        "Scrape Company Names and Links",
-        "Process Company Data",
-        "Calculate Adjusted Statistics"
-    ]
-)
-
-# Run the selected function
-if selected_function == "Scrape Nifty50 Data":
-    st.header("Nifty50 Data")
-    nifty50_df = function_1()
-    st.write(nifty50_df)
-
-elif selected_function == "Scrape Company Names and Links":
-    st.header("Company Names and Links")
-    df_links = function_2()
-    st.write(df_links)
-
-elif selected_function == "Process Company Data":
-    st.header("Process Company Data")
-    company_name = st.text_input("Enter Company Name:")
-    if company_name:
-        df_links = function_2()  # Fetch the company links only once
-        process_company_data(company_name, df_links)
-        st.success(f"Data processed for {company_name}.")
-
 # New tab for calculating adjusted statistics
 elif selected_function == "Calculate Adjusted Statistics":
     st.header("Calculate Adjusted Statistics")
@@ -94,4 +64,3 @@ elif selected_function == "Calculate Adjusted Statistics":
             # Calculate and display adjusted statistics
             adjusted_stats = calculate_adjusted_statistics(dfp, column_name, TTM_Net_Profit_f1, share_f1)
             st.write(adjusted_stats)
-
