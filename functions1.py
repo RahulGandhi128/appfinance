@@ -298,8 +298,12 @@ def process_company_data(company_name, df_links):
             st.write("=" * 50)
         else:
             st.error(f"Failed to retrieve Quarterly P&L Statement data for {company_name}.")
+
+        return full_url  # Return full_url for use in other parts of the app
+
     else:
         st.error("Company not found or invalid link.")
+        return None
 # 
 # 
 # 
