@@ -252,7 +252,7 @@ def scrape_cash_flow_statement(url):
         print(f"Error scraping Cash Flow Statement data for URL {url}: {e}")
         return None
 def process_company_data(company_name, df_links):
-    company_link = function_3(company_name, df_links)
+    company_link = get_company_link(company_name, df_links)
 
     if company_link != "Company not found.":
         full_url = "https://www.screener.in" + company_link
