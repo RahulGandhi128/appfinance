@@ -308,7 +308,7 @@ def process_company_data(company_name, df_links):
 # 
 # 
 # Function to scrape a table from a URL ## yha se theek kiya tha 
-def scrape_table(url):
+def scrape_table(full_url):
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
@@ -333,7 +333,7 @@ def scrape_table(url):
     df = pd.DataFrame(table_data, columns=headers)
     return df
 # Function to scrape a table with links from a URL
-def scrape_table_with_links(url):
+def scrape_table_with_links(full_url):
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
