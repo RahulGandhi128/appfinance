@@ -1,3 +1,4 @@
+import streamlit as st
 # Function 1: Scrape data from URLs and return a combined DataFrame
 def function_1():
     import requests
