@@ -7,3 +7,4 @@ requests                # Required for making HTTP requests (commonly used in we
 scikit-learn            # If you're doing any machine learning tasks
 matplotlib              # For plotting and visualizations
 selenium
+webdriver-manager
