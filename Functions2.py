@@ -252,45 +252,53 @@ def scrape_cash_flow_statement(url):
         print(f"Error scraping Cash Flow Statement data for URL {url}: {e}")
         return None
 def process_company_data(company_name, df_links):
-    company_link = get_company_link(company_name, df_links)
+    company_link = function_3(company_name, df_links)
 
     if company_link != "Company not found.":
         full_url = "https://www.screener.in" + company_link
-        print(f"Full URL: {full_url}")  # Optional debug print
+        st.write(f"Full URL: {full_url}")  # Display the URL in the app
 
-        # Get Income Statement
-        income_statement_df = scrape_income_statement(full_url)
+        # Get and display Income Statement
+        income_statement_df = function_5(full_url)
         if income_statement_df is not None:
-            print(f"Company: {company_name} - Income Statement")
-            print(income_statement_df)
+            st.subheader(f"Company: {company_name} - Income Statement")
+            st.write(income_statement_df)
+            st.write("=" * 50)
         else:
-            print(f"Failed to retrieve Income Statement data for {company_name}.")
+            st.error(f"Failed to retrieve Income Statement data for {company_name}.")
 
-        # Get Balance Sheet
-        balance_sheet_df = scrape_balance_sheet(full_url)
+        # Get and display Balance Sheet
+        balance_sheet_df = function_6(full_url)
         if balance_sheet_df is not None:
-            print(f"Company: {company_name} - Balance Sheet")
-            print(balance_sheet_df)
+            st.subheader(f"Company: {company_name} - Balance Sheet")
+            st.write(balance_sheet_df)
+            st.write("=" * 50)
         else:
-            print(f"Failed to retrieve Balance Sheet data for {company_name}.")
+            st.error(f"Failed to retrieve Balance Sheet data for {company_name}.")
 
-        # Get Cash Flow Statement
-        cash_flow_df = scrape_cash_flow_statement(full_url)
+        # Get and display Cash Flow Statement
+        cash_flow_df = function_7(full_url)
+        cash_flow_df.iloc[0, 0] = "Cash Flow from operations"
+        cash_flow_df.iloc[1, 0] = "Cash Flow from investing"
+        cash_flow_df.iloc[2, 0] = "Cash Flow from financing"
         if not cash_flow_df.empty:
-            print(f"Company: {company_name} - Cash Flow Statement")
-            print(cash_flow_df)
+            st.subheader(f"Company: {company_name} - Cash Flow Statement")
+            st.write(cash_flow_df)
+            st.write("=" * 50)
         else:
-            print(f"Failed to retrieve Cash Flow Statement data for {company_name}.")
+            st.error(f"Failed to retrieve Cash Flow Statement data for {company_name}.")
 
-        # Get Quarterly P&L Statement
-        pnl_quarterly = scrape_quarterlypnl_sheet(full_url)
+        # Get and display Quarterly P&L Statement
+        pnl_quarterly = function_4(full_url)
+        pnl_quarterly = pnl_quarterly[:-2]
         if pnl_quarterly is not None:
-            print(f"Company: {company_name} - Quarterly P&L Statement")
-            print(pnl_quarterly)
+            st.subheader(f"Company: {company_name} - Quarterly P&L Statement")
+            st.write(pnl_quarterly)
+            st.write("=" * 50)
         else:
-            print(f"Failed to retrieve Quarterly P&L Statement data for {company_name}.")
+            st.error(f"Failed to retrieve Quarterly P&L Statement data for {company_name}.")
     else:
-        print("Company not found or invalid link.")
+        st.error("Company not found or invalid link.")
 # 
 # 
 # 
