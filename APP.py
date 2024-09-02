@@ -38,15 +38,18 @@ elif selected_function == "Scrape Company Names and Links":
 elif selected_function == "Process Company Data":
     st.header("Process Company Data")
     company_name = st.text_input("Enter Company Name:")
+    
     if company_name:
-        df_links = function_2()  # Fetch the company links only once
-        full_url = process_company_data(company_name, df_links)  # Get full_url from the function
+        # Fetch the company links only once
+        df_links = function_2() 
+        
+        # Run process_company_data and capture full_url
+        full_url = process_company_data(company_name, df_links)
 
         if full_url:
-            # Now you can use full_url in your other functions
+            # Only run these if full_url is properly defined
             df_table = scrape_table(full_url)
             df_links_peers = scrape_table_with_links(full_url)
-            # Perform other operations that need full_url
 
 # Run functions in the background without displaying their outputs
 
