@@ -45,10 +45,10 @@ elif selected_function == "Process Company Data":
 # Run functions in the background without displaying their outputs
 
 # Scrape table from a given URL
-df_table = scrape_table(url)
+df_table = scrape_table(full_url)
 
 # Scrape table with links from a URL
-df_links_peers = scrape_table_with_links(url)
+df_links_peers = scrape_table_with_links(full_url)
 
 # Get quarterly income statements based on scraped peer links
 quarterly_income_statements = get_quarterly_income_statements(df_links_peers)
