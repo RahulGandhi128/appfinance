@@ -41,6 +41,24 @@ elif selected_function == "Process Company Data":
     if company_name:
         df_links = function_2()  # Fetch the company links only once
         process_company_data(company_name, df_links)
+
+# Run functions in the background without displaying their outputs
+
+# Scrape table from a given URL
+df_table = scrape_table(url)
+
+# Scrape table with links from a URL
+df_links_peers = scrape_table_with_links(url)
+
+# Get quarterly income statements based on scraped peer links
+quarterly_income_statements = get_quarterly_income_statements(df_links_peers)
+
+# Calculate the number of shares for the company data
+df_shares = calculate_number_of_shares(dfp)
+
+# Calculate firm metrics using TTM sales and shares data
+TTM_Net_Profit_f1, share_f1, TTM_Sales_f1 = calculate_firm_metrics(ttm_sales_df, df_shares)
+
 # New tab for calculating adjusted statistics
 elif selected_function == "Calculate Adjusted Statistics":
     st.header("Calculate Adjusted Statistics")
