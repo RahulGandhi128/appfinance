@@ -6,3 +6,4 @@ numpy                   # Required for numerical operations
 requests                # Required for making HTTP requests (commonly used in web scraping)
 scikit-learn            # If you're doing any machine learning tasks
 matplotlib              # For plotting and visualizations
+selenium
