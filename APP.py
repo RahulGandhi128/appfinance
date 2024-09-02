@@ -43,13 +43,15 @@ elif selected_function == "Process Company Data":
         # Fetch the company links only once
         df_links = function_2() 
         
-        # Run process_company_data and capture full_url
+        # Call the function and capture the full_url
         full_url = process_company_data(company_name, df_links)
 
+        # Ensure full_url is valid before using it in other functions
         if full_url:
-            # Only run these if full_url is properly defined
             df_table = scrape_table(full_url)
             df_links_peers = scrape_table_with_links(full_url)
+        else:
+            st.error("No valid URL found for the company.")
 
 # Run functions in the background without displaying their outputs
 # Get quarterly income statements based on scraped peer links
