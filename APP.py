@@ -53,19 +53,19 @@ elif selected_function == "Process Company Data":
         else:
             st.error("No valid URL found for the company.")
 
-# Run functions in the background without displaying their outputs
-# Get quarterly income statements based on scraped peer links
-quarterly_income_statements = get_quarterly_income_statements(df_links_peers)
+# # Run functions in the background without displaying their outputs
+# # Get quarterly income statements based on scraped peer links
+# quarterly_income_statements = get_quarterly_income_statements(df_links_peers)
 
-# Calculate the number of shares for the company data
-df_shares = calculate_number_of_shares(dfp)
+# # Calculate the number of shares for the company data
+# df_shares = calculate_number_of_shares(dfp)
 
-# Calculate firm metrics using TTM sales and shares data
-TTM_Net_Profit_f1, share_f1, TTM_Sales_f1 = calculate_firm_metrics(ttm_sales_df, df_shares)
+# # Calculate firm metrics using TTM sales and shares data
+# TTM_Net_Profit_f1, share_f1, TTM_Sales_f1 = calculate_firm_metrics(ttm_sales_df, df_shares)
 
-# # New tab for calculating adjusted statistics
-# elif selected_function == "Calculate Adjusted Statistics":
-#     st.header("Calculate Adjusted Statistics")
+# # # New tab for calculating adjusted statistics
+# # elif selected_function == "Calculate Adjusted Statistics":
+# #     st.header("Calculate Adjusted Statistics")
 
 #     # Assume company_name and dfp (processed data) are available from the earlier step
 #     if company_name:
