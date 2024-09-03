@@ -8,4 +8,4 @@ scikit-learn            # If you're doing any machine learning tasks
 matplotlib              # For plotting and visualizations
 selenium
 webdriver-manager
-pip install selenium webdriver-manager
+selenium webdriver-manager
