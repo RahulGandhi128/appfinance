@@ -81,38 +81,38 @@ elif selected_function == "Process Company Data":
         st.warning("Please enter a valid company name.")
 
         
-if full_url:
-    # Scrape the links table before passing it to other functions
-    df_links_peers = scrape_table_with_links(full_url)
+# if full_url:
+#     # Scrape the links table before passing it to other functions
+#     df_links_peers = scrape_table_with_links(full_url)
 
-    # Ensure df_links_peers is not None or empty before proceeding
-    if df_links_peers is not None and not df_links_peers.empty:
-        # Now pass df_links_peers to get_quarterly_income_statements
-        quarterly_income_statements = get_quarterly_income_statements(df_links_peers)
-    else:
-        st.error("df_links_peers is not generated or it's empty.")
+#     # Ensure df_links_peers is not None or empty before proceeding
+#     if df_links_peers is not None and not df_links_peers.empty:
+#         # Now pass df_links_peers to get_quarterly_income_statements
+#         quarterly_income_statements = get_quarterly_income_statements(df_links_peers)
+#     else:
+#         st.error("df_links_peers is not generated or it's empty.")
 
-# Calculate the number of shares for the company data
-df_shares = calculate_number_of_shares(dfp)
+# # Calculate the number of shares for the company data
+# df_shares = calculate_number_of_shares(dfp)
 
-# Calculate firm metrics using TTM sales and shares data
-TTM_Net_Profit_f1, share_f1, TTM_Sales_f1 = calculate_firm_metrics(ttm_sales_df, df_shares)
-# Assume company_name and dfp (processed data) are available from the earlier step
-if company_name:
-        # Fetch or reuse the previously processed data (assuming it's in dfp, ttm_sales_df)
-        # You might need to ensure dfp and ttm_sales_df are generated in the Process Company Data step
+# # Calculate firm metrics using TTM sales and shares data
+# TTM_Net_Profit_f1, share_f1, TTM_Sales_f1 = calculate_firm_metrics(ttm_sales_df, df_shares)
+# # Assume company_name and dfp (processed data) are available from the earlier step
+# if company_name:
+#         # Fetch or reuse the previously processed data (assuming it's in dfp, ttm_sales_df)
+#         # You might need to ensure dfp and ttm_sales_df are generated in the Process Company Data step
 
-    column_name = st.text_input("Enter the column name for adjustment calculations:")
+#     column_name = st.text_input("Enter the column name for adjustment calculations:")
 
-if column_name:
- # Assuming the processed data is stored in dfp and ttm_sales_df
-    dfp = pd.DataFrame()  # Placeholder, use actual processed data
-    ttm_sales_df = pd.DataFrame()  # Placeholder, use actual TTM sales data
-    df_shares = calculate_number_of_shares(dfp)
+# if column_name:
+#  # Assuming the processed data is stored in dfp and ttm_sales_df
+#     dfp = pd.DataFrame()  # Placeholder, use actual processed data
+#     ttm_sales_df = pd.DataFrame()  # Placeholder, use actual TTM sales data
+#     df_shares = calculate_number_of_shares(dfp)
 
- # Calculate firm metrics
-TTM_Net_Profit_f1, share_f1, _ = calculate_firm_metrics(ttm_sales_df, df_shares)
+#  # Calculate firm metrics
+# TTM_Net_Profit_f1, share_f1, _ = calculate_firm_metrics(ttm_sales_df, df_shares)
 
-# Calculate and display adjusted statistics
-adjusted_stats = calculate_adjusted_statistics(dfp, column_name, TTM_Net_Profit_f1, share_f1)
-st.write(adjusted_stats)
+# # Calculate and display adjusted statistics
+# adjusted_stats = calculate_adjusted_statistics(dfp, column_name, TTM_Net_Profit_f1, share_f1)
+# st.write(adjusted_stats)
