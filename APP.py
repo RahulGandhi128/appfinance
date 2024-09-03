@@ -39,38 +39,33 @@ elif selected_function == "Scrape Company Names and Links":
     df_links = function_2()
     st.write(df_links)
 
-def process_company_data():
+elif selected_function == "Process Company Data":
     st.header("Process Company Data")
-    
-    # Input for company name
     company_name = st.text_input("Enter Company Name:")
 
-    # Only proceed if a company name is provided
     if company_name:
         try:
-            # Fetch company links
-            df_links = function_2()  # This should fetch the company links
+            # Get the links only once
+            df_links = function_2()  # This is assumed to fetch the company links
 
-            # Check if links data is available
+            # Ensure df_links is not empty
             if df_links is not None and not df_links.empty:
-                # Get the specific company link
+                # Call the function to get the company link
                 company_link = get_company_link(company_name, df_links)
 
                 if company_link:
-                    # Construct the full URL
+                    # Redefine full_url based on company_link
                     full_url = "https://www.screener.in" + company_link
                     st.write(f"Full URL: {full_url}")
 
                     try:
-                        # Scrape the tables using the URL
+                        # Call scrape functions to get the data
                         df_table = scrape_table(full_url)
                         df_links_peers = scrape_table_with_links(full_url)
 
-                        # Display the scraped data if available
+                        # Ensure df_links_peers exists before proceeding
                         if df_links_peers is not None and not df_links_peers.empty:
-                            st.write("Company Table Data:")
                             st.write(df_table)
-                            st.write("Peer Links Data:")
                             st.write(df_links_peers)
                         else:
                             st.error("No peer links found for this company.")
@@ -85,21 +80,7 @@ def process_company_data():
     else:
         st.warning("Please enter a valid company name.")
 
-# Streamlit app flow
-def main():
-    st.title("Financial Data Processing App")
-
-    # Dropdown menu for selecting the function
-    selected_function = st.sidebar.selectbox("Select a function", ["Process Company Data", "Other Function"])
-
-    # Call the corresponding function based on the selection
-    if selected_function == "Process Company Data":
-        process_company_data()
-    elif selected_function == "Other Function":
-        st.write("Placeholder for other functions.")
-
-if __name__ == "__main__":
-    main()        
+        
 # if full_url:
 #     # Scrape the links table before passing it to other functions
 #     df_links_peers = scrape_table_with_links(full_url)
