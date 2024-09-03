@@ -1,9 +1,5 @@
 import streamlit as st
 import pandas as pd
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
-
 
 # Import necessary functions
 from functions1 import (
@@ -11,7 +7,7 @@ from functions1 import (
     get_quarterly_income_statements, calculate_number_of_shares, 
     calculate_firm_metrics, calculate_adjusted_statistics, calculate_combined_metrics,
     transpose_and_clean_df, clean_and_convert_to_float, calculate_investment_rate,
-    set_api_key, configure_genai, function_1, function_2, get_company_link
+    set_api_key, configure_genai, function_1, function_2
 )
 
 # Streamlit App
@@ -42,19 +38,27 @@ elif selected_function == "Scrape Company Names and Links":
 elif selected_function == "Process Company Data":
     st.header("Process Company Data")
     company_name = st.text_input("Enter Company Name:")
+    
+    if company_name:
+        # Get the links only once
+        df_links = function_2() 
+        
+        # Call the function and capture the full_url
+        full_url = process_company_data(company_name, df_links)
 
+        # Ensure full_url is valid before using it in scraping functions
+        if full_url:
+            df_table = scrape_table(full_url)
+            df_links_peers = scrape_table_with_links(full_url)
+            st.write(df_table)
+            st.write(df_links_peers)
+        else:
+            st.error("No valid URL found for the company.")
 
         
-# if full_url:
-#     # Scrape the links table before passing it to other functions
-#     df_links_peers = scrape_table_with_links(full_url)
-
-#     # Ensure df_links_peers is not None or empty before proceeding
-#     if df_links_peers is not None and not df_links_peers.empty:
-#         # Now pass df_links_peers to get_quarterly_income_statements
-#         quarterly_income_statements = get_quarterly_income_statements(df_links_peers)
-#     else:
-#         st.error("df_links_peers is not generated or it's empty.")
+# # Run functions in the background without displaying their outputs
+# # Get quarterly income statements based on scraped peer links
+# quarterly_income_statements = get_quarterly_income_statements(df_links_peers)
 
 # # Calculate the number of shares for the company data
 # df_shares = calculate_number_of_shares(dfp)
