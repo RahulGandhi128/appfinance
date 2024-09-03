@@ -42,19 +42,15 @@ elif selected_function == "Scrape Company Names and Links":
 elif selected_function == "Process Company Data":
     st.header("Process Company Data")
     company_name = st.text_input("Enter Company Name:")
-
+    
     if company_name:
         # Get the links only once
-        df_links = function_2()  # This is assumed to fetch the links
+        df_links = function_2()  # Assumes this returns a dataframe with 'Name' and 'Link' columns
         
-        # Call the function to get the company link
-        company_link = get_company_link(company_name, df_links)
-
-        if company_link:
-            # Redefine full_url based on company_link
-            full_url = "https://www.screener.in" + company_link
-            st.write(f"Full URL: {full_url}")
-            
+        # Call the function to get the full URL for the company
+        full_url = process_company_data(company_name, df_links)
+        
+        if full_url:
             try:
                 # Call scrape functions to get the data
                 df_table = scrape_table(full_url)
@@ -70,6 +66,8 @@ elif selected_function == "Process Company Data":
                 st.error(f"An error occurred: {e}")
         else:
             st.error(f"No valid URL found for company: {company_name}")
+
+st.write(f"Full URL: {full_url}")  # Debugging check to ensure URL is passed
 
         
 if full_url:
