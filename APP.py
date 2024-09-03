@@ -41,9 +41,9 @@ elif selected_function == "Process Company Data":
     
     if company_name:
         # Get the links only once
-        df_links = function_2() 
+        df_links = function_2()  # Assumes this returns a dataframe with 'Name' and 'Link' columns
         
-        # Call the function and capture the full_url
+        # Call the function to get the full URL for the company
         full_url = process_company_data(company_name, df_links)
         
         if full_url:
@@ -61,8 +61,7 @@ elif selected_function == "Process Company Data":
             except Exception as e:
                 st.error(f"An error occurred: {e}")
         else:
-            st.error("No valid URL found for the company.")
-
+            st.error(f"No valid URL found for company: {company_name}")
         
 if full_url:
     # Scrape the links table before passing it to other functions
