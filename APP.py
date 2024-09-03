@@ -42,7 +42,7 @@ elif selected_function == "Scrape Company Names and Links":
 elif selected_function == "Process Company Data":
     st.header("Process Company Data")
     company_name = st.text_input("Enter Company Name:")
-st.write(f"Full URL: {full_url}")  # Debugging check to ensure URL is passed
+
 
         
 # if full_url:
