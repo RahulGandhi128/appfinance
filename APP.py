@@ -47,9 +47,10 @@ elif selected_function == "Process Company Data":
         # Get the links only once
         df_links = function_2()  # Assumes this returns a dataframe with 'Name' and 'Link' columns
         
-        # Call the function to get the full URL for the company
-        full_url = process_company_data(company_name, df_links)
-        
+        # Construct the full URL
+        full_url = "https://www.screener.in" + company_link
+        st.write(f"Full URL: {full_url}")
+
         if full_url:
             try:
                 # Call scrape functions to get the data
