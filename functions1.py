@@ -1,4 +1,8 @@
 import streamlit as st
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+
 # Function 1: Scrape data from URLs and return a combined DataFrame
 def function_1():
     import requests
