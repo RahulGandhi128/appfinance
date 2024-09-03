@@ -1,5 +1,9 @@
 import streamlit as st
 import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+
 
 # Import necessary functions
 from functions1 import (
