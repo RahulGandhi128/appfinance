@@ -44,32 +44,41 @@ elif selected_function == "Process Company Data":
     company_name = st.text_input("Enter Company Name:")
 
     if company_name:
-        # Get the links only once
-        df_links = function_2()  # This is assumed to fetch the links
-        
-        # Call the function to get the company link
-        company_link = get_company_link(company_name, df_links)
+        try:
+            # Get the links only once
+            df_links = function_2()  # This is assumed to fetch the company links
 
-        if company_link:
-            # Redefine full_url based on company_link
-            full_url = "https://www.screener.in" + company_link
-            st.write(f"Full URL: {full_url}")
-            
-            try:
-                # Call scrape functions to get the data
-                df_table = scrape_table(full_url)
-                df_links_peers = scrape_table_with_links(full_url)
-                
-                # Ensure df_links_peers exists before proceeding
-                if df_links_peers is not None:
-                    st.write(df_table)
-                    st.write(df_links_peers)
+            # Ensure df_links is not empty
+            if df_links is not None and not df_links.empty:
+                # Call the function to get the company link
+                company_link = get_company_link(company_name, df_links)
+
+                if company_link:
+                    # Redefine full_url based on company_link
+                    full_url = "https://www.screener.in" + company_link
+                    st.write(f"Full URL: {full_url}")
+
+                    try:
+                        # Call scrape functions to get the data
+                        df_table = scrape_table(full_url)
+                        df_links_peers = scrape_table_with_links(full_url)
+
+                        # Ensure df_links_peers exists before proceeding
+                        if df_links_peers is not None and not df_links_peers.empty:
+                            st.write(df_table)
+                            st.write(df_links_peers)
+                        else:
+                            st.error("No peer links found for this company.")
+                    except Exception as e:
+                        st.error(f"Error while scraping tables: {e}")
                 else:
-                    st.error("df_links_peers is not generated.")
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
-        else:
-            st.error(f"No valid URL found for company: {company_name}")
+                    st.error(f"No link found for the company: {company_name}")
+            else:
+                st.error("No company links data available. Please try again.")
+        except Exception as e:
+            st.error(f"An error occurred while processing company data: {e}")
+    else:
+        st.warning("Please enter a valid company name.")
 
         
 if full_url:
