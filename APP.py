@@ -62,6 +62,9 @@ elif selected_function == "Process Company Data":
                 st.error(f"An error occurred: {e}")
         else:
             st.error(f"No valid URL found for company: {company_name}")
+
+st.write(f"Full URL: {full_url}")  # Debugging check to ensure URL is passed
+
         
 if full_url:
     # Scrape the links table before passing it to other functions
