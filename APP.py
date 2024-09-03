@@ -11,7 +11,7 @@ from functions1 import (
     get_quarterly_income_statements, calculate_number_of_shares, 
     calculate_firm_metrics, calculate_adjusted_statistics, calculate_combined_metrics,
     transpose_and_clean_df, clean_and_convert_to_float, calculate_investment_rate,
-    set_api_key, configure_genai, function_1, function_2, get_company_link
+    set_api_key, configure_genai, function_1, function_2
 )
 
 # Streamlit App
@@ -41,9 +41,7 @@ elif selected_function == "Scrape Company Names and Links":
 
 elif selected_function == "Process Company Data":
     st.header("Process Company Data")
-    company_name = st.text_input("Enter Company Name")
-    if selected_function == "Process Company Data":
-        process_company_data()
+    company_name = st.text_input("Enter Company Name:")
 
     if company_name:
         try:
