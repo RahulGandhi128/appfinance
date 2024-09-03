@@ -45,13 +45,21 @@ elif selected_function == "Process Company Data":
         
         # Call the function and capture the full_url
         full_url = process_company_data(company_name, df_links)
-
-        # Ensure full_url is valid before using it in scraping functions
+        
         if full_url:
-            df_table = scrape_table(full_url)
-            df_links_peers = scrape_table_with_links(full_url)
-            st.write(df_table)
-            st.write(df_links_peers)
+            try:
+                # Call scrape functions to get the data
+                df_table = scrape_table(full_url)
+                df_links_peers = scrape_table_with_links(full_url)
+                
+                # Ensure df_links_peers exists before proceeding
+                if df_links_peers is not None:
+                    st.write(df_table)
+                    st.write(df_links_peers)
+                else:
+                    st.error("df_links_peers is not generated.")
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
         else:
             st.error("No valid URL found for the company.")
 
