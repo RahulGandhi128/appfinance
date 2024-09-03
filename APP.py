@@ -84,7 +84,22 @@ def process_company_data():
             st.error(f"An error occurred while processing company data: {e}")
     else:
         st.warning("Please enter a valid company name.")
-        
+
+# Streamlit app flow
+def main():
+    st.title("Financial Data Processing App")
+
+    # Dropdown menu for selecting the function
+    selected_function = st.sidebar.selectbox("Select a function", ["Process Company Data", "Other Function"])
+
+    # Call the corresponding function based on the selection
+    if selected_function == "Process Company Data":
+        process_company_data()
+    elif selected_function == "Other Function":
+        st.write("Placeholder for other functions.")
+
+if __name__ == "__main__":
+    main()        
 # if full_url:
 #     # Scrape the links table before passing it to other functions
 #     df_links_peers = scrape_table_with_links(full_url)
