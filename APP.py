@@ -41,7 +41,9 @@ elif selected_function == "Scrape Company Names and Links":
 
 elif selected_function == "Process Company Data":
     st.header("Process Company Data")
-    company_name = st.text_input("Enter Company Name:")
+    company_name = st.text_input("Enter Company Name
+    if selected_function == "Process Company Data":
+        process_company_data()
 
     if company_name:
         try:
