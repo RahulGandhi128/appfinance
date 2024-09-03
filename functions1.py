@@ -315,6 +315,8 @@ def process_company_data(company_name, df_links):
 def scrape_table(url):
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     
     driver.get(url)
@@ -340,6 +342,8 @@ def scrape_table(url):
 def scrape_table_with_links(url):
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     
     driver.get(url)
