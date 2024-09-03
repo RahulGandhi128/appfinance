@@ -64,9 +64,16 @@ elif selected_function == "Process Company Data":
             st.error("No valid URL found for the company.")
 
         
-# Run functions in the background without displaying their outputs
-# Get quarterly income statements based on scraped peer links
-quarterly_income_statements = get_quarterly_income_statements(df_links_peers)
+if full_url:
+    # Scrape the links table before passing it to other functions
+    df_links_peers = scrape_table_with_links(full_url)
+
+    # Ensure df_links_peers is not None or empty before proceeding
+    if df_links_peers is not None and not df_links_peers.empty:
+        # Now pass df_links_peers to get_quarterly_income_statements
+        quarterly_income_statements = get_quarterly_income_statements(df_links_peers)
+    else:
+        st.error("df_links_peers is not generated or it's empty.")
 
 # Calculate the number of shares for the company data
 df_shares = calculate_number_of_shares(dfp)
