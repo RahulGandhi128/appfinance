@@ -9,6 +9,8 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 import numpy as np
+from selenium.webdriver.chrome.options import Options
+
 
 st.set_page_config(layout="wide")
 
