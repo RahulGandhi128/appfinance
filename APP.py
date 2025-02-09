@@ -71,20 +71,31 @@ COMPANY_DATA = [
 df_links = pd.DataFrame(COMPANY_DATA, columns=['Company Name', 'Link'])
 
 def scrape_table(url):
-    """Scrapes financial table using BeautifulSoup instead of Selenium."""
-    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
-    soup = BeautifulSoup(response.content, "html.parser")
+    """Scrapes financial table using Selenium (Headless mode)."""
+    options = Options()
+    options.add_argument("--headless")  # Run without UI
+    options.add_argument("--no-sandbox")  # Bypass OS security model
+    options.add_argument("--disable-dev-shm-usage")  # Avoid memory issues
 
-    table = soup.select_one("section:nth-of-type(3) table")  # Update this if the table selector is different
-    if not table:
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+    
+    try:
+        driver.get(url)
+        time.sleep(5)  # Allow content to load
+
+        headers = [header.text.strip() for header in driver.find_elements(By.XPATH, '//table/thead/tr/th')]
+        rows = driver.find_elements(By.XPATH, '//table/tbody/tr')
+
+        data = [[cell.text.strip() for cell in row.find_elements(By.TAG_NAME, 'td')] for row in rows]
+        return pd.DataFrame(data, columns=headers)
+
+    except Exception as e:
+        st.error(f"Error fetching data: {e}")
         return None
 
-    headers = [th.text.strip() for th in table.select("thead th")]
-    rows = table.select("tbody tr")
-    data = [[td.text.strip() for td in row.find_all("td")] for row in rows]
-
-    return pd.DataFrame(data, columns=headers)
-
+    finally:
+        driver.quit()  # Always close driver
+        
 def get_income_statement(url):
     """Scrapes the income statement using BeautifulSoup (Fallback for Selenium)."""
     try:
