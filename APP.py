@@ -71,18 +71,16 @@ COMPANY_DATA = [
 df_links = pd.DataFrame(COMPANY_DATA, columns=['Company Name', 'Link'])
 
 def scrape_table(url):
-    """Scrapes financial table using BeautifulSoup instead of Selenium."""
-    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
-    soup = BeautifulSoup(response.content, "html.parser")
-
-    table = soup.select_one("section:nth-of-type(3) table")  # Update this if the table selector is different
-    if not table:
-        return None
-
-    headers = [th.text.strip() for th in table.select("thead th")]
-    rows = table.select("tbody tr")
-    data = [[td.text.strip() for td in row.find_all("td")] for row in rows]
-
+    """Scrapes financial table using Selenium."""
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+    driver.get(url)
+    time.sleep(5)
+    headers = [header.text.strip() for header in driver.find_elements(By.XPATH, '/html/body/main/section[3]/div[2]/div[3]/table/tbody/tr[1]/th')]
+    rows = driver.find_elements(By.XPATH, '/html/body/main/section[3]/div[2]/div[3]/table/tbody/tr')[1:]
+    data = [[cell.text.strip() for cell in row.find_elements(By.TAG_NAME, 'td')] for row in rows]
+    driver.quit()
     return pd.DataFrame(data, columns=headers)
         
 def get_income_statement(url):
