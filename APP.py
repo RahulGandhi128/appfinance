@@ -9,8 +9,6 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 import numpy as np
-from selenium.webdriver.chrome.options import Options
-
 
 st.set_page_config(layout="wide")
 
@@ -82,24 +80,18 @@ def scrape_table(url):
     data = [[cell.text.strip() for cell in row.find_elements(By.TAG_NAME, 'td')] for row in rows]
     driver.quit()
     return pd.DataFrame(data, columns=headers)
-        
+    
+
 def get_income_statement(url):
-    """Scrapes the income statement using BeautifulSoup (Fallback for Selenium)."""
-    try:
-        response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        table = soup.select_one('section:nth-of-type(5) > div:nth-of-type(3) > table')
-        if not table:
-            return None
-
-        headers = [th.text.strip() for th in table.select_one('thead > tr').find_all('th')]
-        data = [[td.text.strip() for td in row.find_all('td')] for row in table.select('tbody > tr')]
-        return pd.DataFrame(data, columns=headers)
-
-    except Exception as e:
-        st.error(f"Error fetching income statement: {e}")
+    """Scrapes the income statement."""
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    table = soup.select_one('section:nth-of-type(5) > div:nth-of-type(3) > table')
+    if not table:
         return None
+    headers = [th.text.strip() for th in table.select_one('thead > tr').find_all('th')]
+    data = [[td.text.strip() for td in row.find_all('td')] for row in table.select('tbody > tr')]
+    return pd.DataFrame(data, columns=headers)
 
 def calculate_statistics(df, column_name):
     """Calculates statistical metrics."""
@@ -116,18 +108,24 @@ def calculate_adjusted_statistics(df, column_name, price, pe):
     """Adjusts statistics based on price and PE."""
     statistics = calculate_statistics(df, column_name)
     price, pe = pd.to_numeric(price, errors='coerce'), pd.to_numeric(pe, errors='coerce')
-    
     return {key: (value * price) / pe for key, value in statistics.items() if np.issubdtype(type(value), np.number)}
 
 def classify_stocks_inplace(scrape_table_df):
-    """Adds a 'Classification' column to the DataFrame."""
+    """
+    Adds a 'Classification' column to the existing scrape_table_df DataFrame.
+    - High P/E & Low Dividend → Growth Stock
+    - Low P/E & High Dividend → Value Stock
+    - Otherwise → None
+    """
     if not isinstance(scrape_table_df, pd.DataFrame) or scrape_table_df.empty:
-        return
+        return  # Do nothing if the table is empty or invalid
 
+    # Define thresholds for classification
     scrape_table_df["P/E"] = pd.to_numeric(scrape_table_df["P/E"], errors="coerce")
     pe_median = scrape_table_df["P/E"].median()
     scrape_table_df["Div Yld %"] = pd.to_numeric(scrape_table_df["Div Yld %"], errors="coerce")
     div_yield_median = scrape_table_df["Div Yld %"].median()
+
 
     def classify_row(row):
         if pd.isna(row["P/E"]) or pd.isna(row["Div Yld %"]):
@@ -136,13 +134,15 @@ def classify_stocks_inplace(scrape_table_df):
             return f"{row['Name']} → Growth Stock"
         elif row["P/E"] < pe_median and row["Div Yld %"] > div_yield_median:
             return f"{row['Name']} → Value Stock"
-        return None
+        else:
+            return None
 
     scrape_table_df["Classification"] = scrape_table_df.apply(classify_row, axis=1)
 
-# Streamlit App UI
+# Streamlit App
 st.title("Financial Data Scraper & Analysis")
 
+# Dropdown for company selection
 company_name = st.selectbox("Select a Company", df_links['Company Name'])
 
 if st.button("Fetch Data"):
@@ -155,13 +155,14 @@ if st.button("Fetch Data"):
         st.subheader("Income Statement")
         st.dataframe(income_statement_df)
 
-    # Scrape Financial Table using Selenium
-    scrape_table_df = scrape_table(full_url)
+    # Scrape Financial Table
+    scrape_table_df = scrape_table(full_url)  # Renaming to avoid function-variable conflict
     if isinstance(scrape_table_df, pd.DataFrame):
         classify_stocks_inplace(scrape_table_df)
         st.subheader("Sector Analysis")
         st.dataframe(scrape_table_df)
 
+        # Calculate and Display Statistics
         column_name = 'P/E' if 'P/E' in scrape_table_df.columns else scrape_table_df.columns[0]
         pe, price = pd.to_numeric(scrape_table_df.iloc[0, 3], errors='coerce'), pd.to_numeric(scrape_table_df.iloc[0, 2], errors='coerce')
 
@@ -175,7 +176,7 @@ if st.button("Fetch Data"):
         st.write(adjusted_statistics)
 
         st.write(f"Current price: {price}")
-        
+
 st.markdown(
     """
     <style>
